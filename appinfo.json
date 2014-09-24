@@ -1,0 +1,19 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        "configurable"
+    ],
+    "companyName": "jaran.nilsen@gmail.com",
+    "longName": "TeaTime",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "TeaTime",
+    "uuid": "6f1bccd0-e2ba-4006-a9f4-2a194a822979",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
