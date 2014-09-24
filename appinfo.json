@@ -7,7 +7,13 @@
     "longName": "TeaTime",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "file": "images/teacup_bw.png",
+                "name": "TEACUP_BW",
+                "type": "png"
+            }
+        ]
     },
     "shortName": "TeaTime",
     "uuid": "6f1bccd0-e2ba-4006-a9f4-2a194a822979",
