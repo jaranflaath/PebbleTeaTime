@@ -9,6 +9,12 @@
     "resources": {
         "media": [
             {
+                "file": "images/teacup_icon.png",
+                "menuIcon": true,
+                "name": "TEACUP_ICON",
+                "type": "png"
+            },
+            {
                 "file": "images/teacup_bw.png",
                 "name": "TEACUP_BW",
                 "type": "png"
