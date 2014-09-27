@@ -50,14 +50,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 
 char* floatToString(char* buffer, int bufferSize, double number)
 {
-	char decimalBuffer[5];
-
 	snprintf(buffer, bufferSize, "%d", (int)number);
-	strcat(buffer, ":");
-
-	snprintf(decimalBuffer, 5, "%d", (int)((double)(number - (int)number) * (double)100));
-	strcat(buffer, decimalBuffer);
-
 	return buffer;
 }
 
@@ -87,10 +80,11 @@ void show_timer(const char *tea_name, const char *temperature_text, double steep
   text_layer_set_text_alignment(start_help_text, GTextAlignmentCenter);
   text_layer_set_font(start_help_text, fonts_get_system_font(FONT_KEY_GOTHIC_14));
   
-  char count_down_text[4];
-  
-  TextLayer *count_down_layer = text_layer_create(GRect(0, 54, bounds.size.w, 45));
-  text_layer_set_text(count_down_layer, floatToString(count_down_text, 4, steep_time));
+  char minutes_text[5], seconds_text[3];
+  char* minutes = floatToString(minutes_text, 5, (int)(steep_time * 60) / 60);
+  char* seconds = floatToString(seconds_text, 3, (int)(steep_time * 60) % 60);
+  TextLayer *count_down_layer = text_layer_create(GRect(0, 58, bounds.size.w, 45));
+  text_layer_set_text(count_down_layer, strcat(strcat(minutes, ":"), seconds));
   text_layer_set_size(count_down_layer, GSize(bounds.size.w, 45));
   text_layer_set_text_alignment(count_down_layer, GTextAlignmentCenter);
   text_layer_set_font(count_down_layer,fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
@@ -110,19 +104,19 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
  
   switch(cell_index->row) {
     case 0:
-      show_timer("Black", "100ºC / 210ºF", 2.30);
+      show_timer("Black", "100ºC / 210ºF", 2.50);
       break;
     case 1:
-      show_timer("Green", "75-80ºC / 165-175ºF", 2.30);
+      show_timer("Green", "75-80ºC / 165-175ºF", 2.50);
       break;
     case 2:
-      show_timer("Herbal", "100ºC / 210ºF", 2.30);
+      show_timer("Herbal", "100ºC / 210ºF", 2.50);
       break;
     case 3:
-      show_timer("Oolong", "80-85ºC / 175-185ºF", 2.30);
+      show_timer("Oolong", "80-85ºC / 175-185ºF", 2.50);
       break;
     case 4:
-      show_timer("White", "65-70ºC	/ 150-155ºF", 2.30);
+      show_timer("White", "65-70ºC	/ 150-155ºF", 2.50);
       break;
   }
 }
