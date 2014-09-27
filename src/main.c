@@ -3,7 +3,7 @@
 #include "main.h"
 
 #define MENU_SECTIONS 1
-#define MENU_ITEMS 5
+#define MENU_ITEMS 6
 
 Window *main_window;
 
@@ -47,16 +47,19 @@ void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *c
       menu_cell_basic_draw(ctx, cell_layer, "Black tea", "100ºC / 210ºF", NULL);
       break;
     case 1:
-      menu_cell_basic_draw(ctx, cell_layer, "Green tea", "75-80ºC / 165-175ºF", NULL);
+      menu_cell_basic_draw(ctx, cell_layer, "Green tea", "75-80ºC / 167-176ºF", NULL);
       break;
     case 2:
       menu_cell_basic_draw(ctx, cell_layer, "Herbal tea", "100ºC / 210ºF", NULL);
       break;
     case 3:
-      menu_cell_basic_draw(ctx, cell_layer, "Oolong tea", "80-85ºC / 175-185ºF", NULL);
+      menu_cell_basic_draw(ctx, cell_layer, "Oolong tea", "80-85ºC / 176-185ºF", NULL);
       break;
     case 4:
-      menu_cell_basic_draw(ctx, cell_layer, "White tea", "65-70ºC	/ 150-155ºF", NULL);
+      menu_cell_basic_draw(ctx, cell_layer, "White tea", "65-70ºC	/ 149-158ºF", NULL);
+      break;
+    case 5:
+      menu_cell_basic_draw(ctx, cell_layer, "Yellow tea", "70-75ºC	/ 158-167ºF", NULL);
       break;
   }
 }
@@ -183,19 +186,22 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
 
   switch(cell_index->row) {
     case 0:
-      show_timer("Black", "100ºC / 210ºF", 0.50);
+      show_timer("Black", "100ºC / 210ºF", 2.50);
       break;
     case 1:
-      show_timer("Green", "75-80ºC / 165-175ºF", 2.50);
+      show_timer("Green", "75-80ºC / 167-176ºF", 1.50);
       break;
     case 2:
-      show_timer("Herbal", "100ºC / 210ºF", 2.50);
+      show_timer("Herbal", "100ºC / 210ºF", 4.50);
       break;
     case 3:
-      show_timer("Oolong", "80-85ºC / 175-185ºF", 2.50);
+      show_timer("Oolong", "80-85ºC / 176-185ºF", 2.50);
       break;
     case 4:
-      show_timer("White", "65-70ºC	/ 150-155ºF", 2.50);
+      show_timer("White", "65-70ºC	/ 149-158ºF", 2.50);
+      break;
+    case 5:
+      show_timer("Yellow", "70-75ºC	/ 158-167ºF", 1.50);
       break;
   }
 }
