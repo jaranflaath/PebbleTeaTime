@@ -48,6 +48,19 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
   }
 }
 
+char* floatToString(char* buffer, int bufferSize, double number)
+{
+	char decimalBuffer[5];
+
+	snprintf(buffer, bufferSize, "%d", (int)number);
+	strcat(buffer, ":");
+
+	snprintf(decimalBuffer, 5, "%d", (int)((double)(number - (int)number) * (double)100));
+	strcat(buffer, decimalBuffer);
+
+	return buffer;
+}
+
 void show_timer(const char *tea_name, const char *temperature_text, double steep_time) {
   
   Window *timer_window = window_create();
@@ -68,8 +81,25 @@ void show_timer(const char *tea_name, const char *temperature_text, double steep
   text_layer_set_text_alignment(temperature_layer, GTextAlignmentCenter);
   text_layer_set_font(temperature_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
   
+  TextLayer *start_help_text = text_layer_create(GRect(0, bounds.size.h - 16, bounds.size.w, 16));
+  text_layer_set_text(start_help_text, "Middle button to start");
+  text_layer_set_size(start_help_text, GSize(bounds.size.w, 16));
+  text_layer_set_text_alignment(start_help_text, GTextAlignmentCenter);
+  text_layer_set_font(start_help_text, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  
+  char count_down_text[4];
+  
+  TextLayer *count_down_layer = text_layer_create(GRect(0, 54, bounds.size.w, 45));
+  text_layer_set_text(count_down_layer, floatToString(count_down_text, 4, steep_time));
+  text_layer_set_size(count_down_layer, GSize(bounds.size.w, 45));
+  text_layer_set_text_alignment(count_down_layer, GTextAlignmentCenter);
+  text_layer_set_font(count_down_layer,fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+  
+  
   layer_add_child(timer_layer, text_layer_get_layer(tea_name_layer));
   layer_add_child(timer_layer, text_layer_get_layer(temperature_layer));
+  layer_add_child(timer_layer, text_layer_get_layer(count_down_layer));
+  layer_add_child(timer_layer, text_layer_get_layer(start_help_text));
   layer_add_child(window_layer, timer_layer);
   
   window_stack_push(timer_window, true);
@@ -80,19 +110,19 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
  
   switch(cell_index->row) {
     case 0:
-      show_timer("Black", "100ºC / 210ºF", 2.5);
+      show_timer("Black", "100ºC / 210ºF", 2.30);
       break;
     case 1:
-      show_timer("Green", "75-80ºC / 165-175ºF", 2.5);
+      show_timer("Green", "75-80ºC / 165-175ºF", 2.30);
       break;
     case 2:
-      show_timer("Herbal", "100ºC / 210ºF", 2.5);
+      show_timer("Herbal", "100ºC / 210ºF", 2.30);
       break;
     case 3:
-      show_timer("Oolong", "80-85ºC / 175-185ºF", 2.5);
+      show_timer("Oolong", "80-85ºC / 175-185ºF", 2.30);
       break;
     case 4:
-      show_timer("White", "65-70ºC	/ 150-155ºF", 2.5);
+      show_timer("White", "65-70ºC	/ 150-155ºF", 2.30);
       break;
   }
 }
