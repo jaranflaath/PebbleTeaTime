@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include <PDUtils.h>
+#include "main.h"
 
 #define MENU_SECTIONS 1
 #define MENU_ITEMS 5
@@ -20,27 +21,26 @@ time_t endTime;
 
 bool countdownActive = false;
 
-static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
+uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
   return MENU_SECTIONS;
 }
 
 
-static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
+uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
   return MENU_ITEMS;
 }
 
-
-static int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
+int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
   return MENU_CELL_BASIC_HEADER_HEIGHT;
 }
 
 
-static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, uint16_t section_index, void *data) {
+void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, uint16_t section_index, void *data) {
   return menu_cell_basic_header_draw(ctx, cell_layer, "Select tea type");
 }
 
 
-static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
+void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 
   switch(cell_index->row) {
     case 0:
@@ -59,12 +59,6 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
       menu_cell_basic_draw(ctx, cell_layer, "White tea", "65-70ºC	/ 150-155ºF", NULL);
       break;
   }
-}
-
-char* floatToString(char* buffer, int bufferSize, double number)
-{
-	snprintf(buffer, bufferSize, "%d", (int)number);
-	return buffer;
 }
 
 void timer_update_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -109,16 +103,18 @@ void select_single_click_handler(ClickRecognizerRef recognizer, void *context)
     tick_timer_service_subscribe(SECOND_UNIT, timer_update_handler);
 }
 
+
+void config_provider(Window *window) {
+     window_single_click_subscribe(BUTTON_ID_SELECT, select_single_click_handler);
+     window_single_click_subscribe(BUTTON_ID_BACK, back_single_click_handler);
+}
+
+
 void back_single_click_handler(ClickRecognizerRef recognizer, void *context)
 {
     countdownActive = false;
     tick_timer_service_unsubscribe();
     window_stack_pop(true);
-}
-
-void config_provider(Window *window) {
-     window_single_click_subscribe(BUTTON_ID_SELECT, select_single_click_handler);
-     window_single_click_subscribe(BUTTON_ID_BACK, back_single_click_handler);
 }
 
 void show_timer(const char *tea_name, const char *temperature_text, double steep_time) {
