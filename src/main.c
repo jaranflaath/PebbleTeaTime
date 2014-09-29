@@ -136,6 +136,8 @@ void select_single_click_handler(ClickRecognizerRef recognizer, void *context)
     countdownActive = true;
     startTime = time(NULL);
     endTime = startTime + (steepTime * 60);
+    text_layer_set_text(start_help_text, "Back button to stop");
+    layer_mark_dirty(text_layer_get_layer(start_help_text));
     tick_timer_service_subscribe(SECOND_UNIT, timer_update_handler);
 }
 
