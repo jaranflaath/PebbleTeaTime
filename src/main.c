@@ -4,6 +4,7 @@
 
 #define MENU_SECTIONS 1
 #define MENU_ITEMS 6
+#define DEFAULT_STEEP_INTERVAL 0.5
 
 Window *main_window;
 
@@ -70,14 +71,7 @@ void timer_update_handler(struct tm *tick_time, TimeUnits units_changed) {
 
   time_t time_left = (endTime - startTime - time_passed);
 
-  char *time_string = "0:00";
-  int minutes = (int)time_left / 60;
-  int seconds = (int)time_left % 60;
-
-  snprintf(time_string, 5, "%01d:%02d", minutes, seconds);
-
-  text_layer_set_text(count_down_layer, time_string);
-  layer_mark_dirty(text_layer_get_layer(count_down_layer));
+  update_time_layer(time_left);
 
   if(time_left <= 0) {
 
@@ -93,6 +87,18 @@ void timer_update_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 }
 
+void update_time_layer(time_t time) {
+
+  char *time_string = "0:00";
+  int minutes = (int)time / 60;
+  int seconds = (int)time % 60;
+
+  snprintf(time_string, 5, "%01d:%02d", minutes, seconds);
+
+  text_layer_set_text(count_down_layer, time_string);
+  layer_mark_dirty(text_layer_get_layer(count_down_layer));
+}
+
 
 void select_single_click_handler(ClickRecognizerRef recognizer, void *context)
 {
@@ -106,10 +112,35 @@ void select_single_click_handler(ClickRecognizerRef recognizer, void *context)
     tick_timer_service_subscribe(SECOND_UNIT, timer_update_handler);
 }
 
+void up_single_click_handler(ClickRecognizerRef recognizer, void *context) {
+
+    if(countdownActive) {
+      return;
+    }
+
+    steepTime += (double)DEFAULT_STEEP_INTERVAL;
+    update_time_layer(steepTime * 60);
+
+}
+
+void down_single_click_handler(ClickRecognizerRef recognizer, void *context) {
+
+    if(countdownActive) {
+      return;
+    }
+
+    if(steepTime * 60 > (double)DEFAULT_STEEP_INTERVAL * 60) {
+      steepTime -= (double)DEFAULT_STEEP_INTERVAL;
+      update_time_layer(steepTime * 60);
+    }
+}
 
 void config_provider(Window *window) {
      window_single_click_subscribe(BUTTON_ID_SELECT, select_single_click_handler);
      window_single_click_subscribe(BUTTON_ID_BACK, back_single_click_handler);
+     window_single_click_subscribe(BUTTON_ID_UP, up_single_click_handler);
+     window_single_click_subscribe(BUTTON_ID_DOWN, down_single_click_handler);
+
 }
 
 
