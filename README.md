@@ -1,7 +1,7 @@
 PebbleTeaTime
 =============
 
-Pebble app for timing your perfect cup of tea!
+Pebble app for timing your perfect cup of tea! Search for "J's Tea Timer" in the Pebble App Store to install on your watch.
 
 
 Acknowledgements
