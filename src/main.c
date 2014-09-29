@@ -141,7 +141,7 @@ void show_timer(const char *tea_name, const char *temperature_text, double steep
   text_layer_set_font(temperature_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
 
   TextLayer *start_help_text = text_layer_create(GRect(0, bounds.size.h - 16, bounds.size.w, 16));
-  text_layer_set_text(start_help_text, "Middle button to start");
+  text_layer_set_text(start_help_text, "Select button to start");
   text_layer_set_size(start_help_text, GSize(bounds.size.w, 16));
   text_layer_set_text_alignment(start_help_text, GTextAlignmentCenter);
   text_layer_set_font(start_help_text, fonts_get_system_font(FONT_KEY_GOTHIC_14));
