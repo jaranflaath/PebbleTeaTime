@@ -7,20 +7,47 @@
 #define DEFAULT_STEEP_INTERVAL 0.5
 
 Window *main_window;
-
 MenuLayer *menu_layer;
-
 Window *timer_window;
-
+Layer *timer_layer;
+TextLayer *tea_name_layer;
 TextLayer *count_down_layer;
+TextLayer *temperature_layer;
+TextLayer *start_help_text;
 
 time_t startTime;
-
 double steepTime;
-
 time_t endTime;
-
 bool countdownActive = false;
+
+
+void deallocate_timer_window() {
+
+  if(start_help_text != NULL) {
+    text_layer_destroy(start_help_text);
+  }
+
+  if(temperature_layer != NULL) {
+    text_layer_destroy(temperature_layer);
+  }
+
+  if(count_down_layer != NULL) {
+    text_layer_destroy(count_down_layer);
+  }
+
+  if(tea_name_layer != NULL) {
+    text_layer_destroy(tea_name_layer);
+  }
+
+  if(timer_layer != NULL) {
+    layer_destroy(timer_layer);
+  }
+
+  if(timer_window != NULL) {
+    window_destroy(timer_window);
+  }
+
+}
 
 uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
   return MENU_SECTIONS;
@@ -148,6 +175,7 @@ void back_single_click_handler(ClickRecognizerRef recognizer, void *context)
 {
     countdownActive = false;
     tick_timer_service_unsubscribe();
+    deallocate_timer_window();
     window_stack_pop(true);
 }
 
@@ -157,21 +185,21 @@ void show_timer(const char *tea_name, const char *temperature_text, double steep
   Layer *window_layer = window_get_root_layer(timer_window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  Layer *timer_layer = layer_create(bounds);
+  timer_layer = layer_create(bounds);
 
-  TextLayer *tea_name_layer = text_layer_create(GRect(0, 0, bounds.size.w, 35));
+  tea_name_layer = text_layer_create(GRect(0, 0, bounds.size.w, 35));
   text_layer_set_text(tea_name_layer, tea_name);
   text_layer_set_size(tea_name_layer, GSize(bounds.size.w, 35));
   text_layer_set_text_alignment(tea_name_layer, GTextAlignmentCenter);
   text_layer_set_font(tea_name_layer,fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
 
-  TextLayer *temperature_layer = text_layer_create(GRect(0, 36, bounds.size.w, 18));
+  temperature_layer = text_layer_create(GRect(0, 36, bounds.size.w, 18));
   text_layer_set_text(temperature_layer, temperature_text);
   text_layer_set_size(temperature_layer, GSize(bounds.size.w, 18));
   text_layer_set_text_alignment(temperature_layer, GTextAlignmentCenter);
   text_layer_set_font(temperature_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
 
-  TextLayer *start_help_text = text_layer_create(GRect(0, bounds.size.h - 16, bounds.size.w, 16));
+  start_help_text = text_layer_create(GRect(0, bounds.size.h - 16, bounds.size.w, 16));
   text_layer_set_text(start_help_text, "Select button to start");
   text_layer_set_size(start_help_text, GSize(bounds.size.w, 16));
   text_layer_set_text_alignment(start_help_text, GTextAlignmentCenter);
@@ -204,16 +232,8 @@ void show_timer(const char *tea_name, const char *temperature_text, double steep
 
 }
 
-void deallocate_timer_window() {
-
-  if(timer_window != NULL) {
-    window_destroy(timer_window);
-  }
-}
 
 void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
-
-  deallocate_timer_window();
 
   switch(cell_index->row) {
     case 0:
@@ -264,6 +284,7 @@ void handle_init(void) {
 }
 
 void handle_deinit(void) {
+  menu_layer_destroy(menu_layer);
   window_destroy(main_window);
 }
 
