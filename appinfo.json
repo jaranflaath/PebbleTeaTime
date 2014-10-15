@@ -18,8 +18,8 @@
     },
     "shortName": "J's Tea Timer",
     "uuid": "6f1bccd0-e2ba-4006-a9f4-2a194a822979",
-    "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionCode": 2,
+    "versionLabel": "1.1",
     "watchapp": {
         "watchface": false
     }
