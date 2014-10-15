@@ -3,7 +3,8 @@
 #include "main.h"
 
 #define MENU_SECTIONS 1
-#define MENU_ITEMS 6
+#define NUMBER_OF_TEA_TYPES 6
+#define MENU_ITEMS NUMBER_OF_TEA_TYPES
 #define DEFAULT_STEEP_INTERVAL 0.5
 
 Window *main_window;
@@ -19,6 +20,14 @@ time_t startTime;
 double steepTime;
 time_t endTime;
 bool countdownActive = false;
+
+struct Tea {
+    char *name;
+    char *temperature;
+    double steepTime;
+};
+
+struct Tea teaTypes[NUMBER_OF_TEA_TYPES];
 
 
 void deallocate_timer_window() {
@@ -70,26 +79,9 @@ void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, uint16_t 
 
 void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 
-  switch(cell_index->row) {
-    case 0:
-      menu_cell_basic_draw(ctx, cell_layer, "Black tea", "100ºC / 210ºF", NULL);
-      break;
-    case 1:
-      menu_cell_basic_draw(ctx, cell_layer, "Green tea", "75-80ºC / 167-176ºF", NULL);
-      break;
-    case 2:
-      menu_cell_basic_draw(ctx, cell_layer, "Herbal tea", "100ºC / 210ºF", NULL);
-      break;
-    case 3:
-      menu_cell_basic_draw(ctx, cell_layer, "Oolong tea", "80-85ºC / 176-185ºF", NULL);
-      break;
-    case 4:
-      menu_cell_basic_draw(ctx, cell_layer, "White tea", "65-70ºC	/ 149-158ºF", NULL);
-      break;
-    case 5:
-      menu_cell_basic_draw(ctx, cell_layer, "Yellow tea", "70-75ºC	/ 158-167ºF", NULL);
-      break;
-  }
+  int tea_index = cell_index->row;
+  menu_cell_basic_draw(ctx, cell_layer, teaTypes[tea_index].name, teaTypes[tea_index].temperature, NULL);
+
 }
 
 void timer_update_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -237,30 +229,39 @@ void show_timer(const char *tea_name, const char *temperature_text, double steep
 
 void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
 
-  switch(cell_index->row) {
-    case 0:
-      show_timer("Black", "100ºC / 210ºF", 2.50);
-      break;
-    case 1:
-      show_timer("Green", "75-80ºC / 167-176ºF", 1.50);
-      break;
-    case 2:
-      show_timer("Herbal", "100ºC / 210ºF", 4.50);
-      break;
-    case 3:
-      show_timer("Oolong", "80-85ºC / 176-185ºF", 2.50);
-      break;
-    case 4:
-      show_timer("White", "65-70ºC	/ 149-158ºF", 2.50);
-      break;
-    case 5:
-      show_timer("Yellow", "70-75ºC	/ 158-167ºF", 1.50);
-      break;
-  }
+  int tea_index = cell_index->row;
+  show_timer(teaTypes[tea_index].name, teaTypes[tea_index].temperature, teaTypes[tea_index].steepTime);
+  
 }
 
 
 void handle_init(void) {
+
+  teaTypes[0].name = "Black";
+  teaTypes[0].temperature = "100ºC / 210ºF";
+  teaTypes[0].steepTime = 2.50;
+
+  teaTypes[1].name = "Green";
+  teaTypes[1].temperature = "75-80ºC / 167-176ºF";
+  teaTypes[1].steepTime = 1.50;
+
+  teaTypes[2].name = "Herbal";
+  teaTypes[2].temperature = "100ºC / 210ºF";
+  teaTypes[2].steepTime = 4.50;
+
+  teaTypes[3].name = "Oolong";
+  teaTypes[3].temperature = "80-85ºC / 176-185ºF";
+  teaTypes[3].steepTime = 2.50;
+
+  teaTypes[4].name = "White";
+  teaTypes[4].temperature = "65-70ºC	/ 149-158ºF";
+  teaTypes[4].steepTime = 2.50;
+
+  teaTypes[5].name = "Yellow";
+  teaTypes[5].temperature = "70-75ºC	/ 158-167ºF";
+  teaTypes[5].steepTime = 1.50;
+
+
   main_window = window_create();
   window_stack_push(main_window, true);
 
