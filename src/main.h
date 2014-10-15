@@ -1,4 +1,4 @@
-
+double read_key_or_default(int key, double default_val);
 void update_time_layer(time_t time);
 void up_single_click_handler(ClickRecognizerRef recognizer, void *context);
 void down_single_click_handler(ClickRecognizerRef recognizer, void *context);

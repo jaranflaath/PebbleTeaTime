@@ -6,6 +6,12 @@
 #define NUMBER_OF_TEA_TYPES 6
 #define MENU_ITEMS NUMBER_OF_TEA_TYPES
 #define DEFAULT_STEEP_INTERVAL 0.5
+#define BLACK_TEA_STEEP_SK 1
+#define GREEN_TEA_STEEP_SK 2
+#define HERBAL_TEA_STEEP_SK 3
+#define OOLONG_TEA_STEEP_SK 4
+#define WHITE_TEA_STEEP_SK 5
+#define YELLOW_TEA_STEEP_SK 6
 
 Window *main_window;
 MenuLayer *menu_layer;
@@ -25,9 +31,11 @@ struct Tea {
     char *name;
     char *temperature;
     double steepTime;
+    int storageKey;
 };
 
 struct Tea teaTypes[NUMBER_OF_TEA_TYPES];
+struct Tea *activeTea;
 
 
 void deallocate_timer_window() {
@@ -125,6 +133,9 @@ void select_single_click_handler(ClickRecognizerRef recognizer, void *context)
       return;
     }
 
+    activeTea->steepTime = steepTime;
+    persist_write_int(activeTea->storageKey, steepTime * 100);
+
     countdownActive = true;
     startTime = time(NULL);
     endTime = startTime + (steepTime * 60);
@@ -168,6 +179,7 @@ void config_provider(Window *window) {
 void back_single_click_handler(ClickRecognizerRef recognizer, void *context)
 {
     countdownActive = false;
+    activeTea = NULL;
     tick_timer_service_unsubscribe();
     deallocate_timer_window();
     window_stack_pop(true);
@@ -230,8 +242,14 @@ void show_timer(const char *tea_name, const char *temperature_text, double steep
 void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
 
   int tea_index = cell_index->row;
+  activeTea = &teaTypes[tea_index];
   show_timer(teaTypes[tea_index].name, teaTypes[tea_index].temperature, teaTypes[tea_index].steepTime);
-  
+
+}
+
+double read_key_or_default(int key, double default_val) {
+
+  return persist_exists(key) ? (double)persist_read_int(key) / 100.0 : default_val;
 }
 
 
@@ -239,27 +257,33 @@ void handle_init(void) {
 
   teaTypes[0].name = "Black";
   teaTypes[0].temperature = "100ºC / 210ºF";
-  teaTypes[0].steepTime = 2.50;
+  teaTypes[0].storageKey = BLACK_TEA_STEEP_SK;
+  teaTypes[0].steepTime = read_key_or_default(BLACK_TEA_STEEP_SK, 2.50);
 
   teaTypes[1].name = "Green";
   teaTypes[1].temperature = "75-80ºC / 167-176ºF";
-  teaTypes[1].steepTime = 1.50;
+  teaTypes[1].storageKey = GREEN_TEA_STEEP_SK;
+  teaTypes[1].steepTime = read_key_or_default(GREEN_TEA_STEEP_SK, 1.50);
 
   teaTypes[2].name = "Herbal";
   teaTypes[2].temperature = "100ºC / 210ºF";
-  teaTypes[2].steepTime = 4.50;
+  teaTypes[2].storageKey = HERBAL_TEA_STEEP_SK;
+  teaTypes[2].steepTime = read_key_or_default(HERBAL_TEA_STEEP_SK, 4.50);
 
   teaTypes[3].name = "Oolong";
   teaTypes[3].temperature = "80-85ºC / 176-185ºF";
-  teaTypes[3].steepTime = 2.50;
+  teaTypes[3].storageKey = OOLONG_TEA_STEEP_SK;
+  teaTypes[3].steepTime = read_key_or_default(OOLONG_TEA_STEEP_SK, 2.50);
 
   teaTypes[4].name = "White";
   teaTypes[4].temperature = "65-70ºC	/ 149-158ºF";
-  teaTypes[4].steepTime = 2.50;
+  teaTypes[4].storageKey = WHITE_TEA_STEEP_SK;
+  teaTypes[4].steepTime = read_key_or_default(WHITE_TEA_STEEP_SK, 2.50);
 
   teaTypes[5].name = "Yellow";
   teaTypes[5].temperature = "70-75ºC	/ 158-167ºF";
-  teaTypes[5].steepTime = 1.50;
+  teaTypes[5].storageKey = YELLOW_TEA_STEEP_SK;
+  teaTypes[5].steepTime = read_key_or_default(YELLOW_TEA_STEEP_SK, 1.50);
 
 
   main_window = window_create();
